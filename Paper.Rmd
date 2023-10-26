@@ -1,7 +1,11 @@
 ---
 title: "Urbanization and Public Transportation of Los Angeles"
-author: "Kainoa Kanter, Julian Jacobson, Aidan Lastname"
-date: "2023-10-25" # Change to date when we submit
+bibliography: master.bib
+author: 
+  name: "Kainoa Kanter, Julian Jacobson, Aidan Lastname"
+  affiliation: "Math 28, Professor Smith, Santa Monica College"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+geometry: margin=1in
 output:
     pdf_document:
         extra_dependencies: ['amsmath']
