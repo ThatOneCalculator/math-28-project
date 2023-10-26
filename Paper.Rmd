@@ -1,14 +1,12 @@
 ---
 title: "Urbanization and Public Transportation of Los Angeles"
-bibliography: master.bib
-author: 
-  name: "Kainoa Kanter, Julian Jacobson, Aidan Lastname"
-  affiliation: "Math 28, Professor Smith, Santa Monica College"
+author: "Kainoa Kanter, Julian Jacobson, Aidan Lastname"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 geometry: margin=1in
+abstract: "This paper will examine how the rapid growth of Los Angeles affects the demand for public transportation, utilizing derivatives to determine the rate of change in public transportation usage and studying the elasticity of demand for transportation options based on pricing, availability, convenience, and modes."
 output:
-    pdf_document:
-        extra_dependencies: ['amsmath']
+  pdf_document:
+    extra_dependencies: ['amsmath']
 ---
 
 inline equation $A = \pi r^2$
