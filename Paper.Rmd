@@ -1,0 +1,14 @@
+---
+title: "Urbanization and Public Transportation of Los Angeles"
+author: "Kainoa Kanter, Julian Jacobson, Aidan Lastname"
+date: "2023-10-25" # Change to date when we submit
+output:
+    pdf_document:
+        extra_dependencies: ['amsmath']
+---
+
+inline equation $A = \pi r^2$
+
+$$
+f(x) = ax^2+bx+x
+$$
