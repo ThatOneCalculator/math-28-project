@@ -37,12 +37,8 @@ Metro E Line,Stations,29 (5 shared with A Line)
 Metro K Line,Miles,5.9 mi
 Metro K Line,Type,Light Rail
 Metro K Line,Stations,7
-Metro Busways,Metro G (Orange) Line,Miles,17.7
-Metro Busways,Metro G (Orange) Line,Type,Busway
-Metro Busways,Metro G (Orange) Line,Stations,18
-Metro Busways,Metro J (Silver) Line,Miles,n/a
-Metro Busways,Metro J (Silver) Line,Type,Busway
-Metro Busways,Metro J (Silver) Line,Stations,12
+Metro Busways,Metro G (Orange) Line,Miles 17.7
+Metro Busways,Metro J (Silver) Line,Stations 12
 Bikes,Class I (Off Street Bike Path),341 miles
 Bikes,Class II (Unprotected Bike Lanes),969 miles
 Bikes,Class III (On-Street Bicycle Route),520 miles
