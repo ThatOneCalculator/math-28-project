@@ -1,0 +1,127 @@
+Category,Attribute,Value
+Metro Bus,Bus stops,11980 (as of June '23)
+Metro Bus,Service area,1447 square miles
+Metro Bus,Number of bus routes (directly operated and contracted),120 (as of June '23)
+Metro Bus,Directly operated bus fleet,1888 buses (as of June '23)
+Metro Bus,Buses assigned contractors to provide service on Metro routes,143
+Metro Bus,Annual revenue service hours (directly operated) in FY23,6590379
+Metro Bus,Annual revenue service hours (contracted) in FY23,498656*
+Metro Bus,Total revenue service hours in FY23,7089035
+Metro Bus,Annual revenue service miles (directly operated) in FY23,69192547
+Metro Bus,Annual revenue service miles (contracted) in FY23,5242318*
+Metro Bus,Total revenue service miles in FY23,74434865
+Metro Rail,Stations,108 stations
+Metro Rail,Number of heavy rail cars,100 heavy rail cars
+Metro Rail,Number of light rail cars,337 light rail cars
+Metro Rail,Miles of service,109 mi
+Metro Rail,Number of lines,6 lines (2 heavy rail, 4 light rail)
+Metro Rail,Annual revenue service hours in FY23,1340907
+Metro Rail,Annual revenue service miles in FY23,29014299
+Metro Rail,Station elevators,180
+Metro Rail,Station escalators,171
+Metro A (Blue) Line,Miles,48.5 mi
+Metro A (Blue) Line,Type,Light rail
+Metro A (Blue) Line,Stations,44 (5 shared with E Line)
+Metro B (Red) Line,Miles,14.7 mi
+Metro B (Red) Line,Type,Heavy rail
+Metro B (Red) Line,Stations,14 (6 shared with D Line)
+Metro C (Green) Line,Miles,19.3 mi
+Metro C (Green) Line,Type,Light rail
+Metro C (Green) Line,Stations,17 (1 shared)
+Metro D (Purple) Line,Miles,5.1 mi
+Metro D (Purple) Line,Type,Heavy rail
+Metro D (Purple) Line,Stations,8 (6 shared with B Line)
+Metro E Line,Miles,22
+Metro E Line,Type,Light Rail
+Metro E Line,Stations,29 (5 shared with A Line)
+Metro K Line,Miles,5.9 mi
+Metro K Line,Type,Light Rail
+Metro K Line,Stations,7
+Metro Busways,Metro G (Orange) Line,Miles,17.7
+Metro Busways,Metro G (Orange) Line,Type,Busway
+Metro Busways,Metro G (Orange) Line,Stations,18
+Metro Busways,Metro J (Silver) Line,Miles,n/a
+Metro Busways,Metro J (Silver) Line,Type,Busway
+Metro Busways,Metro J (Silver) Line,Stations,12
+Bikes,Class I (Off Street Bike Path),341 miles
+Bikes,Class II (Unprotected Bike Lanes),969 miles
+Bikes,Class III (On-Street Bicycle Route),520 miles
+Bikes,Class IV (Separated Bicycle Lanes/Cycle Track),64 miles
+Bikes,Total,1894 miles
+Bikes,Number of Metro Bike Share stations,221 stations
+Bikes,Number of bikes in the Metro Bike Share program,1800
+Bikes,Number of bike trips taken through the Metro Bike Share Program in 2022,290000+
+Bikes,Number of Metro BikeHubs,5
+Metro Micro,Number of vehicles,85
+Metro Micro,Number of service zones,8
+Metro Micro,Revenue hours in FY23,220400
+Metro Micro,Revenue service miles in FY23,2850386
+Metro Micro,Passenger boarding in FY23,695500
+Metro Micro,Number of trips taken,1.2M+
+Carpool and Expressway,Miles of HOV lanes,509.8 lane miles
+Carpool and Expressway,Miles of MetroExpress lanes,25 miles (50 miles in both directions)
+Carpool and Expressway,Number of transponders issued for Metro ExpressLanes,1.4 million
+Carpool and Expressway,Number of trips taken on Metro ExpressLanes,342097711 trips
+Carpool and Expressway,Number of soundwalls Metro has built since 2000,20.7 miles
+Freeway Service Patrol,Number of tow truck beats,43
+Freeway Service Patrol,Number of tow trucks on patrol,138
+Freeway Service Patrol,Number of freeway miles served,475
+Freeway Service Patrol,Number of motorists assisted monthly,25k / month
+Freeway Service Patrol,Motorist hours saved annually from sitting in traffic,9.8 million hours
+Freeway Service Patrol,Gallons of fuel savings annually,16.9 million gallons
+Freeway Service Patrol,Emissions reductions annually,150 million kg CO2
+Freeway Service Patrol,Annual budget,$38 million
+Metro Personnel (As of June '23),Microtransit operators,166
+Metro Personnel (As of June '23),Bus operators (full-time),3896
+Metro Personnel (As of June '23),Bus operators (part-time),657
+Metro Personnel (As of June '23),Rail operators,439
+Metro Personnel (As of June '23),The Teamsters Union represents 177 Metro security guards.
+Metro Personnel (As of June '23),Represented employees,9692
+Metro Personnel (As of June '23),Non-represented employees,1747
+Metro Personnel (As of June '23),Total full-time staff,10290
+Metro FY24 Adopted Budget,Revenues (in millions)
+Metro FY24 Adopted Budget,Passenger Fares,$146.8
+Metro FY24 Adopted Budget,ExpressLane tolls,$65.5
+Metro FY24 Adopted Budget,Advertising,$27.7
+Metro FY24 Adopted Budget,Transportation Development Act (TDA),$600.0
+Metro FY24 Adopted Budget,State Transit Assistance (STA) / SB1 STA (1),$188.0
+Metro FY24 Adopted Budget,SB1 State of Good Repair,$26.6
+Metro FY24 Adopted Budget,Proposition A,$1200.0
+Metro FY24 Adopted Budget,Proposition C,$1200.0
+Metro FY24 Adopted Budget,Measure R,$1200.0
+Metro FY24 Adopted Budget,Measure M,$1200.0
+Metro FY24 Adopted Budget,Grant Reimbursements,$1946.7
+Metro FY24 Adopted Budget,Bond Proceeds & Prior Year Carryover,$1125.7
+Metro FY24 Adopted Budget,Total Resources,$9017.9
+Metro FY24 Adopted Budget,Expenditures (in millions)
+Metro FY24 Adopted Budget,Transportation Infrastructure Development,$2210.3
+Metro FY24 Adopted Budget,Transit Construction,$1919.2
+Metro FY24 Adopted Budget,Transit Planning,$291.1
+Metro FY24 Adopted Budget,Metro Transit – Operations,$2363.7
+Metro FY24 Adopted Budget,Operations & Maintenance,$2333.4
+Metro FY24 Adopted Budget,Regional Operating Services,$30.2
+Metro FY24 Adopted Budget,Metro Transit Capital Improvement Program (CIP),$541.4
+Metro FY24 Adopted Budget,State of Good Repair,$366.1
+Metro FY24 Adopted Budget,Other Asset Improvements,$175.3
+Metro FY24 Adopted Budget,Regional Allocation and Pass-Throughs,$2057.7
+Metro FY24 Adopted Budget,Local Agencies,$1213.6
+Metro FY24 Adopted Budget,Regional Transit,$781.2
+Metro FY24 Adopted Budget,Regional Federal Grants,$30.4
+Metro FY24 Adopted Budget,Fare Assistance,$32.5
+Metro FY24 Adopted Budget,Regional Rail,$302.9
+Metro FY24 Adopted Budget,Metro Regional Rail,$158.0
+Metro FY24 Adopted Budget,Metrolink,$144.9
+Metro FY24 Adopted Budget,General Planning & Programs,$233.7
+Metro FY24 Adopted Budget,Active Transportation, Bike & Other,$83.4
+Metro FY24 Adopted Budget,Financial, Grants Management & Admin,$60.4
+Metro FY24 Adopted Budget,Property Management,$85.0
+Metro FY24 Adopted Budget,Public Private Partnership (P3) / Unsolicited Proposals,$4.9
+Metro FY24 Adopted Budget,Unsolicited Proposals,$4.9
+Metro FY24 Adopted Budget,Congestion Management,$131.9
+Metro FY24 Adopted Budget,ExpressLanes,$61.9
+Metro FY24 Adopted Budget,Freeway Service Patrol,$41.4
+Metro FY24 Adopted Budget,Motorist Services,$14.7
+Metro FY24 Adopted Budget,Rideshare Services,$13.9
+Metro FY24 Adopted Budget,Debt Program,$489.8
+Metro FY24 Adopted Budget,Oversight & Administration,$84.3
+Metro FY24 Adopted Budget,Total Expenses,$9017.9
