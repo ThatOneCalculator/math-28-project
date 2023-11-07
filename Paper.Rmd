@@ -1,6 +1,6 @@
 ---
 title: "Urbanization and Public Transportation of Los Angeles"
-author: "Kainoa Kanter, Julian Jacobson, Aidan Lastname"
+author: "Kainoa Kanter, Julian Jacobson, Aidan Allen"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 geometry: margin=1in
 abstract: "This paper will examine how the rapid growth of Los Angeles affects the demand for public transportation, utilizing derivatives to determine the rate of change in public transportation usage and studying the elasticity of demand for transportation options based on pricing, availability, convenience, and modes."
@@ -9,8 +9,144 @@ output:
     extra_dependencies: ['amsmath']
 ---
 
-inline equation $A = \pi r^2$
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+library(ggplot2)
+library(latex2exp)
+library(dplyr)
+library(tidyr)
+library(scales)
+library(stargazer)
+ridership_data <- read.csv("data/April_Transit_Ridership.csv")
+budget_data <- read.csv("data/City_Budget_Expenditures_on_Transportation_20231106.csv")
+```
+
+# Introduction
+
+Los Angeles -- the sprawling metropolis that we call home -- has become synonymous with both opportunity and urban challenges and has experienced rapid growth in recent decades. This growth has significant implications for various sectors, particularly the public transportation system. As one of the most car-dependent cities in the United States, Los Angeles faces unique challenges in scaling its public transportation network to meet increasing demand. Understanding the dynamics of public transportation usage and the factors influencing ridership is critical for planning and policy development.
+
+The aim of this study is to examine how the rapid growth of Los Angeles affects the demand for public transportation. The investigation includes a quantitative assessment utilizing derivatives to determine the rate of change in public transportation usage. Additionally, the study examines the elasticity of demand for transportation options in Los Angeles based on pricing, availability, convenience, and modes. This analysis offers insights into the responsiveness of ridership to changes in these factors, informing strategies to enhance the public transportation system.
+
+## Methodology
+
+### Data Collection
+
+The analysis is based on comprehensive datasets including average weekend and weekday ridership from 2019 to 2023, as well as a range of urban metrics such as crime rates, accident statistics, and city maintenance records. Yearly transportation budget figures also contribute to understanding the financial aspects influencing public transportation operations.
+
+The methodological approach consists of two primary quantitative analyses:
+
+#### Rate of Change Analysis:
+
+-   Utilize time-series data to calculate the first derivative of ridership numbers, yielding the rate of change over the years. This derivative analysis will be conducted separately for bus and rail services, offering a granular view of usage trends.
+-   Data transformation into a suitable format for analysis using the tidyverse collection of R packages.
+-   Visualization of trends through line plots, elucidating patterns and growth trajectories.
+
+#### Elasticity of Demand Analysis:
+
+-   Analyze the responsiveness of public transportation demand to changes in price (fare changes), availability (service hours, frequency), convenience (route changes, wait times), and modes (bus vs. rail).
+
+-   Employ econometric modeling to estimate the price elasticity of demand, cross-elasticity, and income elasticity, using regression analysis where ridership
+
+#### Visualization
+
+-   Data visualization was implemented using the `ggplot2` package in R
+-   Line plots were created to illustrate the trends in public transportation ridership over time, broken down by transportation type (bus and rail)
+-   Adjustments were made to display actual numbers instead of scientific notation for clarity
+
+\newpage
+
+# Exploratory Data Analysis
+
+```{r rate-of-change-plot, fig.cap="Line plot of rate of change in public transportation ridership over time"}
+ridership_long <- gather(ridership_data, key = "Type", value = "RateOfChange", -Year)
+
+# Create the line plot
+ggplot(ridership_long, aes(x=Year, y=RateOfChange, color=Type, group=Type)) +
+  geom_line() +
+  scale_y_continuous(labels = label_comma()) +
+  labs(title="Trend in Rate of Change of Public Transportation Usage",
+       x="Year",
+       y="Rate of Change in Total Monthly Ridership",
+       color="Transportation Type") +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(2019, 2023))
+```
+
+\newpage
+
+# Derivative Analysis
+
+The rate of change in public transportation usage offers valuable insights into trends and can help forecast future demand. By differentiating the ridership data with respect to time, we can obtain the instantaneous rate of change, which is expressed mathematically as:
 
 $$
-f(x) = ax^2+bx+x
+R'(t) = \frac{dR}{dt}
 $$
+
+where $R(t)$ represents the ridership at time $t$. This derivative analysis provides the velocity of ridership change, indicating whether usage is increasing or decreasing over time.
+
+The following R code calculates the rate of change for Total Monthly Bus and Total Monthly Rail ridership and performs simple linear regression on these rates to understand how they change over the years:
+
+```{r rate-of-change}
+# Calculate the rate of change for Total Monthly Bus and Rail
+ridership_data$BusRateOfChange <- c(NA, diff(ridership_data$Total.Monthly.Bus))
+ridership_data$RailRateOfChange <- c(NA, diff(ridership_data$Total.Monthly.Rail))
+
+# Simple linear regression on the rate of change
+bus_model <- lm(BusRateOfChange ~ Year, data = ridership_data)
+rail_model <- lm(RailRateOfChange ~ Year, data = ridership_data)
+
+# Polynomial regression on the rate of change
+bus_model_poly <- lm(BusRateOfChange ~ poly(Year, 2, raw=TRUE), data = ridership_data)
+rail_model_poly <- lm(RailRateOfChange ~ poly(Year, 2, raw=TRUE), data = ridership_data)
+
+```
+
+```{r rate-of-change-results, results='asis'}
+stargazer(bus_model, rail_model, type = "latex", title = "Linear Regression Results", header=FALSE, omit=c("Year","Constant"))
+stargazer(bus_model_poly, rail_model_poly, type = "latex", title = "Polynomial Regression Results", header=FALSE, omit=c("poly","Constant"))
+```
+
+```{r predict-trend-usage}
+ridership_trend_long <- gather(ridership_data, key = "Type", value = "TotalRidership", -Year)
+
+# Predict the rate of change for the fitted models
+ridership_data$PredictedBusROC <- predict(bus_model, newdata=ridership_data)
+ridership_data$PredictedRailROC <- predict(rail_model, newdata=ridership_data)
+
+# Predict the rate of change for the fitted polynomial models
+ridership_data$PredictedBusROC_poly <- predict(bus_model_poly, newdata=ridership_data)
+ridership_data$PredictedRailROC_poly <- predict(rail_model_poly, newdata=ridership_data)
+
+```
+
+```{r trend-usage, fig.cap="Line plot of public transportation ridership over time with regression lines"}
+# Create the line plot with observed data
+p <- ggplot(ridership_trend_long, aes(x=Year, y=TotalRidership, color=Type, group=Type)) +
+  geom_line() +
+  # Assuming ridership_data has a 'Year' column and the predicted values only.
+  # Add the regression lines for predicted bus data (explicit aesthetics)
+  geom_line(data=ridership_data, aes(x=Year, y=PredictedBusROC, group=1), color="blue", linetype="dashed", size=1) +
+  # Add the regression lines for predicted rail data (explicit aesthetics)
+  geom_line(data=ridership_data, aes(x=Year, y=PredictedRailROC, group=1), color="red", linetype="dashed", size=1) +
+  geom_line(data=ridership_data, aes(x=Year, y=PredictedBusROC_poly, group=2), color="hotpink", linetype="dotted", size=1) +
+  # Add the regression lines for predicted rail data (explicit aesthetics)
+  geom_line(data=ridership_data, aes(x=Year, y=PredictedRailROC_poly, group=2), color="darkgreen", linetype="dotted", size=1) +
+  scale_y_continuous(labels = scales::label_comma()) +
+  labs(title="Trend in Public Transportation Usage",
+       x="Year",
+       y="Total Monthly Ridership",
+       color="Transportation Type") +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(2019, 2023))
+
+# Data of 2023
+last_year <- max(ridership_data$Year)
+
+# Add labels for the dashed lines
+p + annotate("text", x=last_year, y=ridership_data$PredictedBusROC[ridership_data$Year == last_year], label="Predicted Bus Linear", color="blue", hjust=1.1, vjust=-1) +
+  annotate("text", x=last_year, y=ridership_data$PredictedRailROC[ridership_data$Year == last_year], label="Predicted Rail Linear", color="red", hjust=1.1, vjust=4) +
+  annotate("text", x=last_year, y=ridership_data$PredictedRailROC_poly[ridership_data$Year == last_year], label="Predicted Bus Quadratic", color="hotpink", hjust=1.1, vjust=6) +
+  annotate("text", x=last_year, y=ridership_data$PredictedRailROC_poly[ridership_data$Year == last_year], label="Predicted Rail Quadratic", color="darkgreen", hjust=1.1, vjust=8)
+```
