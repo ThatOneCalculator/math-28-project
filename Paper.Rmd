@@ -3,7 +3,7 @@ title: "Urbanization and Public Transportation of Los Angeles"
 author: "Kainoa Kanter, Julian Jacobson, Aidan Allen"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 geometry: margin=1in
-abstract: "This paper will examine how the rapid growth of Los Angeles affects the demand for public transportation, utilizing derivatives to determine the rate of change in public transportation usage and studying the elasticity of demand for transportation options based on pricing, availability, convenience, and modes."
+abstract: "This paper will examine how Los Angeles's demand for public transportation has been affected the last few years, utilizing derivatives to determine the rate of change in public transportation usage and studying the elasticity of demand for transportation options based on pricing, availability, convenience, and modes."
 output:
   pdf_document:
     extra_dependencies: ['amsmath']
@@ -145,8 +145,8 @@ p <- ggplot(ridership_trend_long, aes(x=Year, y=TotalRidership, color=Type, grou
 last_year <- max(ridership_data$Year)
 
 # Add labels for the dashed lines
-p + annotate("text", x=last_year, y=ridership_data$PredictedBusROC[ridership_data$Year == last_year], label="Predicted Bus Linear", color="blue", hjust=1.1, vjust=-1) +
-  annotate("text", x=last_year, y=ridership_data$PredictedRailROC[ridership_data$Year == last_year], label="Predicted Rail Linear", color="red", hjust=1.1, vjust=4) +
-  annotate("text", x=last_year, y=ridership_data$PredictedRailROC_poly[ridership_data$Year == last_year], label="Predicted Bus Quadratic", color="hotpink", hjust=1.1, vjust=6) +
-  annotate("text", x=last_year, y=ridership_data$PredictedRailROC_poly[ridership_data$Year == last_year], label="Predicted Rail Quadratic", color="darkgreen", hjust=1.1, vjust=8)
+p + annotate("text", x=last_year, y=ridership_data$PredictedBusROC[ridership_data$Year == last_year], label="Predicted Bus Linear", color="blue", hjust=1.1, vjust=6) +
+  annotate("text", x=last_year, y=ridership_data$PredictedRailROC[ridership_data$Year == last_year], label="Predicted Rail Linear", color="red", hjust=1.1, vjust=6) +
+  annotate("text", x=last_year, y=ridership_data$PredictedRailROC_poly[ridership_data$Year == last_year], label="Predicted Bus Quadratic", color="hotpink", hjust=1.1, vjust=8) +
+  annotate("text", x=last_year, y=ridership_data$PredictedRailROC_poly[ridership_data$Year == last_year], label="Predicted Rail Quadratic", color="darkgreen", hjust=1.1, vjust=10)
 ```
