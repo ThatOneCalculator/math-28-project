@@ -87,8 +87,6 @@ $$
 
 where $R(t)$ represents the ridership at time $t$. This derivative analysis provides the velocity of ridership change, indicating whether usage is increasing or decreasing over time.
 
-The following R code calculates the rate of change for Total Monthly Bus and Total Monthly Rail ridership and performs simple linear regression on these rates to understand how they change over the years:
-
 ```{r rate-of-change}
 # Calculate the rate of change for Total Monthly Bus and Rail
 ridership_data$BusRateOfChange <- c(NA, diff(ridership_data$Total.Monthly.Bus))
