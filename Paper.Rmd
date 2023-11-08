@@ -134,7 +134,7 @@ p <- ggplot(ridership_trend_long, aes(x=Year, y=TotalRidership, color=Type, grou
   geom_line(data=ridership_data, aes(x=Year, y=PredictedBusROC_poly, group=2), color="hotpink", linetype="dotted", size=2) +
   # Add the regression lines for predicted rail data (explicit aesthetics)
   geom_line(data=ridership_data, aes(x=Year, y=PredictedRailROC_poly, group=2), color="darkorange", linetype="dotted", size=2) +
-  scale_y_continuous(labels = scales::label_comma(), breaks = scales::pretty_breaks(n = 16)) +
+  scale_y_continuous(labels = scales::label_comma(), breaks = scales::pretty_breaks(n = 14)) +
   labs(title="Trend in Public Transportation Usage",
        x="Year",
        y="Total Monthly Ridership",
