@@ -69,7 +69,7 @@ ggplot(ridership_long, aes(x=Year, y=RateOfChange, color=Type, group=Type)) +
   geom_line() +
   scale_y_continuous(labels = label_comma()) +
   labs(title="Trend in Rate of Change of Public Transportation Usage",
-       x="Year",
+       x="April of Each Year",
        y="Rate of Change in Total Monthly Ridership",
        color="Transportation Type") +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(2019, 2023))
@@ -87,7 +87,8 @@ $$
 
 where $R(t)$ represents the ridership at time $t$. This derivative analysis provides the velocity of ridership change, indicating whether usage is increasing or decreasing over time.
 
-```{r rate-of-change}
+```{r rate-of-change-and-regression}
+# Derivative Analysis and Regression
 # Calculate the rate of change for Total Monthly Bus and Rail
 ridership_data$BusRateOfChange <- c(NA, diff(ridership_data$Total.Monthly.Bus))
 ridership_data$RailRateOfChange <- c(NA, diff(ridership_data$Total.Monthly.Rail))
@@ -100,16 +101,6 @@ rail_model <- lm(RailRateOfChange ~ Year, data = ridership_data)
 bus_model_poly <- lm(BusRateOfChange ~ poly(Year, 2, raw=TRUE), data = ridership_data)
 rail_model_poly <- lm(RailRateOfChange ~ poly(Year, 2, raw=TRUE), data = ridership_data)
 
-```
-
-```{r rate-of-change-results, results='asis'}
-stargazer(bus_model, rail_model, type = "latex", title = "Linear Regression Results", header=FALSE, omit=c("Year","Constant"))
-stargazer(bus_model_poly, rail_model_poly, type = "latex", title = "Polynomial Regression Results", header=FALSE, omit=c("poly","Constant"))
-```
-
-```{r predict-trend-usage}
-ridership_trend_long <- gather(ridership_data, key = "Type", value = "TotalRidership", -Year)
-
 # Predict the rate of change for the fitted models
 ridership_data$PredictedBusROC <- predict(bus_model, newdata=ridership_data)
 ridership_data$PredictedRailROC <- predict(rail_model, newdata=ridership_data)
@@ -117,34 +108,90 @@ ridership_data$PredictedRailROC <- predict(rail_model, newdata=ridership_data)
 # Predict the rate of change for the fitted polynomial models
 ridership_data$PredictedBusROC_poly <- predict(bus_model_poly, newdata=ridership_data)
 ridership_data$PredictedRailROC_poly <- predict(rail_model_poly, newdata=ridership_data)
+```
+
+```{r regression-results, results='asis'}
+# Regression Results
+stargazer(bus_model, rail_model, type = "latex", title = "Linear Regression Results", header=FALSE, omit=c("Year","Constant"))
+stargazer(bus_model_poly, rail_model_poly, type = "latex", title = "Polynomial Regression Results", header=FALSE, omit=c("poly","Constant"))
+```
+
+```{r predict-trend-usage}
+# Predict Trend Usage
+# Extend the data frame to include all years for prediction
+all_years <- data.frame(Year = seq(min(ridership_data$Year), 2027))
+
+# Predict the rate of change for all years using the linear and polynomial models
+all_years$PredictedBusROC <- predict(bus_model, newdata=all_years)
+all_years$PredictedRailROC <- predict(rail_model, newdata=all_years)
+all_years$PredictedBusROC_poly <- predict(bus_model_poly, newdata=all_years)
+all_years$PredictedRailROC_poly <- predict(rail_model_poly, newdata=all_years)
+
+# Initialize the first known ridership value
+first_known_bus_ridership <- head(ridership_data$Total.Monthly.Bus, 1)
+first_known_rail_ridership <- head(ridership_data$Total.Monthly.Rail, 1)
+
+# Assuming the rate of change is per year, integrate the rate of change to get the total ridership
+# We start from the first known ridership value and accumulate the predicted rate of change
+all_years$Total.Monthly.Bus <- first_known_bus_ridership + cumsum(c(0, all_years$PredictedBusROC[-1]))
+all_years$Total.Monthly.Rail <- first_known_rail_ridership + cumsum(c(0, all_years$PredictedRailROC[-1]))
+all_years$Total.Monthly.Bus_poly <- first_known_bus_ridership + cumsum(c(0, all_years$PredictedBusROC_poly[-1]))
+all_years$Total.Monthly.Rail_poly <- first_known_rail_ridership + cumsum(c(0, all_years$PredictedRailROC_poly[-1]))
+```
+
+```{r format-and-combine-data}
+# Format and Combine Data
+# Convert the predicted data to long format
+predicted_data_long <- all_years %>%
+  select(Year, Total.Monthly.Bus, Total.Monthly.Rail, Total.Monthly.Bus_poly, Total.Monthly.Rail_poly) %>%
+  pivot_longer(cols = c("Total.Monthly.Bus", "Total.Monthly.Rail", "Total.Monthly.Bus_poly", "Total.Monthly.Rail_poly"),
+               names_to = "Type",
+               values_to = "TotalRidership") %>%
+  mutate(Prediction = "Predicted")
+
+# Now, make sure the actual data is in the same long format with the same column names
+actual_data_long <- ridership_data %>%
+  select(Year, Total.Monthly.Bus, Total.Monthly.Rail) %>%
+  pivot_longer(cols = c("Total.Monthly.Bus", "Total.Monthly.Rail"),
+               names_to = "Type",
+               values_to = "TotalRidership") %>%
+  mutate(Prediction = "Actual")
+
+# Combine the actual and predicted data
+combined_data_long <- rbind(actual_data_long, predicted_data_long)
+
+# Filter out the extreme predicted values for the polynomial bus data
+combined_data_long <- combined_data_long %>%
+  filter(!(Type == "Total.Monthly.Bus_poly" & TotalRidership < -10000000 & Prediction == "Predicted"))
 
 ```
 
-```{r trend-usage, fig.cap="Line plot of public transportation ridership over time with regression lines"}
+```{r plot-trend-usage, fig.cap="Line plot of public transportation ridership over time with regression lines"}
+# Plot Trend Usage
 # Create the line plot with observed data
-p <- ggplot(ridership_trend_long, aes(x=Year, y=TotalRidership, color=Type, group=Type)) +
-  geom_line() +
-  # Assuming ridership_data has a 'Year' column and the predicted values only.
-  # Add the regression lines for predicted bus data (explicit aesthetics)
-  geom_line(data=ridership_data, aes(x=Year, y=PredictedBusROC, group=1), color="blue", linetype="dashed", size=1) +
-  # Add the regression lines for predicted rail data (explicit aesthetics)
-  geom_line(data=ridership_data, aes(x=Year, y=PredictedRailROC, group=1), color="red", linetype="dashed", size=1) +
-  geom_line(data=ridership_data, aes(x=Year, y=PredictedBusROC_poly, group=2), color="hotpink", linetype="dotted", size=2) +
-  # Add the regression lines for predicted rail data (explicit aesthetics)
-  geom_line(data=ridership_data, aes(x=Year, y=PredictedRailROC_poly, group=2), color="darkorange", linetype="dotted", size=2) +
-  scale_y_continuous(labels = scales::label_comma(), breaks = scales::pretty_breaks(n = 14)) +
-  labs(title="Trend in Public Transportation Usage",
-       x="Year",
-       y="Total Monthly Ridership",
-       color="Transportation Type") +
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(2019, 2023))
+p <- ggplot(combined_data_long, aes(x = Year, y = TotalRidership, color = Type)) +
+  geom_line(aes(linetype = Prediction)) +
+  scale_y_continuous(labels = scales::label_comma()) +
+  labs(title = "Trend in Public Transportation Usage",
+       x = "April of Each Year",
+       y = "Total Monthly Ridership",
+       color = "Transportation Type",
+       linetype = "Data Type") +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(min(ridership_data$Year), max(all_years$Year))) +
+  scale_y_continuous(labels = scales::label_comma(), breaks = scales::pretty_breaks(n = 14))
 
-# Data of 2023
-last_year <- max(ridership_data$Year)
+# Add predicted lines for past years (where we have actual data)
+predicted_data_long <- all_years %>%
+  select(Year, Total.Monthly.Bus, Total.Monthly.Rail, Total.Monthly.Bus_poly, Total.Monthly.Rail_poly) %>%
+  pivot_longer(cols = c("Total.Monthly.Bus", "Total.Monthly.Rail", "Total.Monthly.Bus_poly", "Total.Monthly.Rail_poly"),
+               names_to = "Type",
+               values_to = "TotalRidership") %>%
+  mutate(Prediction = "Predicted") %>%
+  filter(Year <= max(ridership_data$Year))
 
-# Add labels for the dashed lines
-p + annotate("text", x=last_year, y=ridership_data$PredictedBusROC[ridership_data$Year == last_year], label="Predicted Bus Linear", color="blue", hjust=1.1, vjust=6.8) +
-  annotate("text", x=last_year, y=ridership_data$PredictedRailROC[ridership_data$Year == last_year], label="Predicted Rail Linear", color="red", hjust=1.1, vjust=6) +
-  annotate("text", x=last_year, y=ridership_data$PredictedRailROC_poly[ridership_data$Year == last_year], label="Predicted Bus Quadratic", color="hotpink", hjust=1.1, vjust=8) +
-  annotate("text", x=last_year, y=ridership_data$PredictedRailROC_poly[ridership_data$Year == last_year], label="Predicted Rail Quadratic", color="darkorange", hjust=1.1, vjust=10)
+# Overlay this on the plot with a different line type
+p <- p +
+  geom_line(data = predicted_data_long, aes(x = Year, y = TotalRidership, color = Type, linetype = Prediction))
+
+print(p)
 ```
