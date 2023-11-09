@@ -22,7 +22,6 @@ library(tidyr)
 library(scales)
 library(stargazer)
 ridership_data <- read.csv("data/April_Transit_Ridership.csv")
-population_data <- read.csv("data/Los_Angeles_Population.csv")
 budget_data <- read.csv("data/City_Budget_Expenditures_on_Transportation_20231106.csv")
 ```
 
@@ -109,22 +108,6 @@ ridership_data$PredictedRailROC <- predict(rail_model, newdata=ridership_data)
 # Predict the rate of change for the fitted polynomial models
 ridership_data$PredictedBusROC_poly <- predict(bus_model_poly, newdata=ridership_data)
 ridership_data$PredictedRailROC_poly <- predict(rail_model_poly, newdata=ridership_data)
-
-# Normalize the ridership data with the population data to get ridership per capita
-ridership_data <- ridership_data %>%
-  left_join(population_data, by = "Year") %>%
-  mutate(
-    RidershipPerCapitaBus = Total.Monthly.Bus / population,
-    RidershipPerCapitaRail = Total.Monthly.Rail / population
-  )
-
-# Calculate the rate of change for Ridership per Capita
-ridership_data$BusRateOfChangePerCapita <- c(NA, diff(ridership_data$RidershipPerCapitaBus))
-ridership_data$RailRateOfChangePerCapita <- c(NA, diff(ridership_data$RidershipPerCapitaRail))
-
-# Linear and polynomial regression for ridership per capita
-bus_model_per_capita <- lm(BusRateOfChangePerCapita ~ Year, data = ridership_data)
-rail_model_per_capita <- lm(RailRateOfChangePerCapita ~ Year, data = ridership_data)
 ```
 
 ```{r regression-results, results='asis'}
@@ -134,36 +117,42 @@ stargazer(bus_model_poly, rail_model_poly, type = "latex", title = "Polynomial R
 ```
 
 ```{r predict-trend-usage}
-# Predict the rate of change per capita for all years using the linear and polynomial models
-# (This assumes you have a model fitted to per capita data)
+# Predict Trend Usage
+# Extend the data frame to include all years for prediction
 all_years <- data.frame(Year = seq(min(ridership_data$Year), 2027))
-all_years <- left_join(all_years, population_data, by = "Year")
 
-all_years$PredictedBusROCPerCapita <- predict(bus_model_per_capita, newdata=all_years)
-all_years$PredictedRailROCPerCapita <- predict(rail_model_per_capita, newdata=all_years)
+# Predict the rate of change for all years using the linear and polynomial models
+all_years$PredictedBusROC <- predict(bus_model, newdata=all_years)
+all_years$PredictedRailROC <- predict(rail_model, newdata=all_years)
+all_years$PredictedBusROC_poly <- predict(bus_model_poly, newdata=all_years)
+all_years$PredictedRailROC_poly <- predict(rail_model_poly, newdata=all_years)
 
-# Assuming the rate of change per capita is per year, integrate the rate of change to get the total ridership per capita
-first_known_bus_ridership_per_capita <- head(ridership_data$RidershipPerCapitaBus, 1)
-first_known_rail_ridership_per_capita <- head(ridership_data$RidershipPerCapitaRail, 1)
+# Initialize the first known ridership value
+first_known_bus_ridership <- head(ridership_data$Total.Monthly.Bus, 1)
+first_known_rail_ridership <- head(ridership_data$Total.Monthly.Rail, 1)
 
-all_years$RidershipPerCapitaBus <- first_known_bus_ridership_per_capita + cumsum(c(0, all_years$PredictedBusROCPerCapita[-1]))
-all_years$RidershipPerCapitaRail <- first_known_rail_ridership_per_capita + cumsum(c(0, all_years$PredictedRailROCPerCapita[-1]))
+# Assuming the rate of change is per year, integrate the rate of change to get the total ridership
+# We start from the first known ridership value and accumulate the predicted rate of change
+all_years$Total.Monthly.Bus <- first_known_bus_ridership + cumsum(c(0, all_years$PredictedBusROC[-1]))
+all_years$Total.Monthly.Rail <- first_known_rail_ridership + cumsum(c(0, all_years$PredictedRailROC[-1]))
+all_years$Total.Monthly.Bus_poly <- first_known_bus_ridership + cumsum(c(0, all_years$PredictedBusROC_poly[-1]))
+all_years$Total.Monthly.Rail_poly <- first_known_rail_ridership + cumsum(c(0, all_years$PredictedRailROC_poly[-1]))
 ```
 
 ```{r format-and-combine-data}
 # Format and Combine Data
 # Convert the predicted data to long format
 predicted_data_long <- all_years %>%
-  select(Year, RidershipPerCapitaBus, RidershipPerCapitaRail) %>%
-  pivot_longer(cols = c("RidershipPerCapitaBus", "RidershipPerCapitaRail"),
+  select(Year, Total.Monthly.Bus, Total.Monthly.Rail, Total.Monthly.Bus_poly, Total.Monthly.Rail_poly) %>%
+  pivot_longer(cols = c("Total.Monthly.Bus", "Total.Monthly.Rail", "Total.Monthly.Bus_poly", "Total.Monthly.Rail_poly"),
                names_to = "Type",
                values_to = "TotalRidership") %>%
   mutate(Prediction = "Predicted")
 
 # Now, make sure the actual data is in the same long format with the same column names
 actual_data_long <- ridership_data %>%
-  select(Year, RidershipPerCapitaBus, RidershipPerCapitaRail) %>%
-  pivot_longer(cols = c("RidershipPerCapitaBus", "RidershipPerCapitaRail"),
+  select(Year, Total.Monthly.Bus, Total.Monthly.Rail) %>%
+  pivot_longer(cols = c("Total.Monthly.Bus", "Total.Monthly.Rail"),
                names_to = "Type",
                values_to = "TotalRidership") %>%
   mutate(Prediction = "Actual")
@@ -173,31 +162,36 @@ combined_data_long <- rbind(actual_data_long, predicted_data_long)
 
 # Filter out the extreme predicted values for the polynomial bus data
 combined_data_long <- combined_data_long %>%
-  filter(!(Type == "RidershipPerCapitaBus" & TotalRidership < -10000000 & Prediction == "Predicted"))
+  filter(!(Type == "Total.Monthly.Bus_poly" & TotalRidership < -10000000 & Prediction == "Predicted"))
 
 ```
 
 ```{r plot-trend-usage, fig.cap="Line plot of public transportation ridership over time with regression lines"}
-# Create the line plot with observed and predicted per capita data
-p <- ggplot(combined_data_long, aes(x = Year, y = RidershipPerCapita, color = Type)) +
+# Plot Trend Usage
+# Create the line plot with observed data
+p <- ggplot(combined_data_long, aes(x = Year, y = TotalRidership, color = Type)) +
   geom_line(aes(linetype = Prediction)) +
   scale_y_continuous(labels = scales::label_comma()) +
-  labs(title = "Trend in Public Transportation Usage Per Capita",
+  labs(title = "Trend in Public Transportation Usage",
        x = "April of Each Year",
-       y = "Ridership Per Capita",
+       y = "Total Monthly Ridership",
        color = "Transportation Type",
        linetype = "Data Type") +
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(min(ridership_data$Year), max(all_years$Year)))
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(min(ridership_data$Year), max(all_years$Year))) +
+  scale_y_continuous(labels = scales::label_comma(), breaks = scales::pretty_breaks(n = 14))
 
-# Print the plot
+# Add predicted lines for past years (where we have actual data)
+predicted_data_long <- all_years %>%
+  select(Year, Total.Monthly.Bus, Total.Monthly.Rail, Total.Monthly.Bus_poly, Total.Monthly.Rail_poly) %>%
+  pivot_longer(cols = c("Total.Monthly.Bus", "Total.Monthly.Rail", "Total.Monthly.Bus_poly", "Total.Monthly.Rail_poly"),
+               names_to = "Type",
+               values_to = "TotalRidership") %>%
+  mutate(Prediction = "Predicted") %>%
+  filter(Year <= max(ridership_data$Year))
+
+# Overlay this on the plot with a different line type
+p <- p +
+  geom_line(data = predicted_data_long, aes(x = Year, y = TotalRidership, color = Type, linetype = Prediction))
+
 print(p)
-
 ```
-
-\newpage
-
-# Sources:
-
-- Transit ridership data: Los Angeles Metro "L.A. METRO TRANSIT RIDERSHIP UP 10 PERCENT, SETS POST-PANDEMIC RECORD", Patrick Chandler
-
-- Los Angeles Population Data (real and predicted): WorldPopulationReview "Los Angeles, California Population"
