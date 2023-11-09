@@ -66,7 +66,7 @@ The methodological approach consists of two primary quantitative analyses:
 ridership_long <- gather(ridership_data, key = "Type", value = "RateOfChange", -Year)
 
 # Create the line plot
-ggplot(ridership_long, aes(x=Year, y=RateOfChange, color=Type, group=Type)) +
+p <- ggplot(ridership_long, aes(x=Year, y=RateOfChange, color=Type, group=Type)) +
   geom_line() +
   scale_y_continuous(labels = label_comma()) +
   labs(title="Trend in Rate of Change of Public Transportation Usage",
@@ -74,6 +74,12 @@ ggplot(ridership_long, aes(x=Year, y=RateOfChange, color=Type, group=Type)) +
        y="Rate of Change in Total Monthly Ridership",
        color="Transportation Type") +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(2019, 2023))
+
+# Theme
+p <- p + theme_bw()
+
+# Show graph
+print(p)
 ```
 
 \newpage
@@ -161,10 +167,47 @@ actual_data_long <- ridership_data %>%
 # Combine the actual and predicted data
 combined_data_long <- rbind(actual_data_long, predicted_data_long)
 
+y_feasible_min <- -10000000
+y_feasible_max <- 70000000
+
 # Filter out the extreme predicted values for the polynomial bus data
 combined_data_long <- combined_data_long %>%
-  filter(!(Type == "Total.Monthly.Bus_poly" & TotalRidership < -10000000 & Prediction == "Predicted"))
+  filter(!(Type == "Total.Monthly.Bus_poly" & TotalRidership < y_feasible_min & Prediction == "Predicted")) %>%
+  filter(!(Type == "Total.Monthly.Bus" & TotalRidership > y_feasible_max & Prediction == "Predicted"))
 
+```
+
+```{r add-tangent-lines}
+# Function to calculate tangent lines for a linear model
+add_tangent_lines <- function(plot, data, x_var, y_var, color, line_length = 0.5) {
+  # Fit a linear model
+  model <- lm(reformulate(x_var, y_var), data = data)
+  
+  # Calculate the slopes (coefficients)
+  coef <- model$coefficients
+  
+  # Create a new data frame for tangent lines
+  tangent_data <- data.frame(
+    x = data[[x_var]],
+    y = data[[y_var]],
+    slope = coef[2]
+  )
+  
+  # Calculate y intercept for each tangent line
+  tangent_data$intercept <- with(tangent_data, y - slope * x)
+  
+  # Create the start and end points for each tangent line
+  tangent_data$xstart <- tangent_data$x - line_length / 2
+  tangent_data$xend <- tangent_data$x + line_length / 2
+  tangent_data$ystart <- with(tangent_data, intercept + slope * xstart)
+  tangent_data$yend <- with(tangent_data, intercept + slope * xend)
+  
+  tangent_data <- tangent_data %>%
+    filter(yend < y_feasible_max & yend > -y_feasible_min)
+  
+  # Add the tangent lines to the plot
+  plot + geom_segment(data = tangent_data, aes(x = xstart, y = ystart, xend = xend, yend = yend), color = color, linetype = "solid", alpha=0.4)
+}
 ```
 
 ```{r plot-trend-usage, fig.cap="Line plot of public transportation ridership over time with regression lines"}
@@ -181,6 +224,10 @@ p <- ggplot(combined_data_long, aes(x = Year, y = TotalRidership, color = Type))
   scale_x_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(min(ridership_data$Year), max(all_years$Year))) +
   scale_y_continuous(labels = scales::label_comma(), breaks = scales::pretty_breaks(n = 14))
 
+# Overlay real data
+p <- p +
+  geom_line(data = ridership_long, aes(x = Year, y = RateOfChange, color = Type), size=1)
+
 # Add predicted lines for past years (where we have actual data)
 predicted_data_long <- all_years %>%
   select(Year, Total.Monthly.Bus, Total.Monthly.Rail, Total.Monthly.Bus_poly, Total.Monthly.Rail_poly) %>%
@@ -194,5 +241,21 @@ predicted_data_long <- all_years %>%
 p <- p +
   geom_line(data = predicted_data_long, aes(x = Year, y = TotalRidership, color = Type, linetype = Prediction))
 
+# Add tangent lines
+p <- add_tangent_lines(p, all_years, "Year", "Total.Monthly.Bus", "red")
+p <- add_tangent_lines(p, all_years, "Year", "Total.Monthly.Bus_poly", "darkgreen", line_length = 0.2)
+p <- add_tangent_lines(p, all_years, "Year", "Total.Monthly.Rail", "turquoise", line_length=0.7)
+p <- add_tangent_lines(p, all_years, "Year", "Total.Monthly.Rail_poly", "purple")
+
+# Theme
+p <- p + theme_bw()
+
+# Show graph
 print(p)
 ```
+
+\newpage
+
+# Sources:
+
+- Transit ridership data: Los Angeles Metro "L.A. METRO TRANSIT RIDERSHIP UP 10 PERCENT, SETS POST-PANDEMIC RECORD", Patrick Chandler
