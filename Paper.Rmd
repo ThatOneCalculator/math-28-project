@@ -22,6 +22,7 @@ library(tidyr)
 library(scales)
 library(stargazer)
 ridership_data <- read.csv("data/April_Transit_Ridership.csv")
+population_data <- read.csv("data/Los_Angeles_Population.csv")
 budget_data <- read.csv("data/City_Budget_Expenditures_on_Transportation_20231106.csv")
 ```
 
