@@ -146,6 +146,51 @@ all_years$Total.Monthly.Bus_poly <- first_known_bus_ridership + cumsum(c(0, all_
 all_years$Total.Monthly.Rail_poly <- first_known_rail_ridership + cumsum(c(0, all_years$PredictedRailROC_poly[-1]))
 ```
 
+```{r format-equations}
+# Get the coefficients for the linear models
+linear_bus_coefs <- coef(bus_model)
+linear_rail_coefs <- coef(rail_model)
+
+# Get the coefficients for the polynomial models
+poly_bus_coefs <- coef(bus_model_poly)
+poly_rail_coefs <- coef(rail_model_poly)
+
+# Construct the linear equations as strings
+linear_bus_eq <- paste0("Total.Monthly.Bus = ", round(linear_bus_coefs[1], 2), " + (", round(linear_bus_coefs[2], 2), " * Year)")
+linear_rail_eq <- paste0("Total.Monthly.Rail = ", round(linear_rail_coefs[1], 2), " + (", round(linear_rail_coefs[2], 2), " * Year)")
+
+# Construct the quadratic equations as strings
+# Assuming the polynomial regression is a second-degree polynomial
+poly_bus_eq <- paste0("Total.Monthly.Bus = ", round(poly_bus_coefs[1], 2), " + (", round(poly_bus_coefs[2], 2), " * Year) + (", round(poly_bus_coefs[3], 2), " * Year^2)")
+poly_rail_eq <- paste0("Total.Monthly.Rail = ", round(poly_rail_coefs[1], 2), " + (", round(poly_rail_coefs[2], 2), " * Year) + (", round(poly_rail_coefs[3], 2), " * Year^2)")
+
+linear_bus_adjusted_intercept <- linear_bus_coefs[1] + linear_bus_coefs[2] * 2019
+linear_rail_adjusted_intercept <- linear_rail_coefs[1] + linear_rail_coefs[2] * 2019
+
+# For polynomial models
+# Note: This requires a bit more calculation because the year term is squared
+poly_bus_adjusted_intercept <- poly_bus_coefs[1] + poly_bus_coefs[2] * 2019 + poly_bus_coefs[3] * 2019^2
+poly_rail_adjusted_intercept <- poly_rail_coefs[1] + poly_rail_coefs[2] * 2019 + poly_rail_coefs[3] * 2019^2
+```
+
+```{r show-equations, results='asis'}
+# Define the equations as LaTeX strings
+linear_bus_eq_adjusted <- sprintf("\\text{Total\\ Monthly\\ Bus} = %.2f + %.2f \\cdot (Year - 2019)", 
+                                  linear_bus_adjusted_intercept, linear_bus_coefs[2])
+linear_rail_eq_adjusted <- sprintf("\\text{Total\\ Monthly\\ Rail} = %.2f + %.2f \\cdot (Year - 2019)", 
+                                   linear_rail_adjusted_intercept, linear_rail_coefs[2])
+
+poly_bus_eq_adjusted <- sprintf("\\text{Total\\ Monthly\\ Bus} = %.2f + %.2f \\cdot (Year - 2019) + %.2f \\cdot (Year - 2019)^2", 
+                                poly_bus_adjusted_intercept, poly_bus_coefs[2], poly_bus_coefs[3])
+poly_rail_eq_adjusted <- sprintf("\\text{Total\\ Monthly\\ Rail} = %.2f + %.2f \\cdot (Year - 2019) + %.2f \\cdot (Year - 2019)^2", 
+                                 poly_rail_adjusted_intercept, poly_rail_coefs[2], poly_rail_coefs[3])
+
+cat("$$", linear_bus_eq_adjusted, "$$")
+cat("$$", linear_rail_eq_adjusted, "$$")
+cat("$$", poly_bus_eq_adjusted, "$$")
+cat("$$", poly_rail_eq_adjusted, "$$")
+```
+
 ```{r format-and-combine-data}
 # Format and Combine Data
 # Convert the predicted data to long format
@@ -215,7 +260,7 @@ add_tangent_lines <- function(plot, data, x_var, y_var, color, line_length = 0.5
 # Create the line plot with observed data
 p <- ggplot(combined_data_long, aes(x = Year, y = TotalRidership, color = Type)) +
   geom_line(data = filter(combined_data_long, Prediction == "Actual"), aes(linetype = Prediction)) +
-  geom_smooth(data = filter(combined_data_long, Prediction == "Predicted"), aes(linetype = Prediction), se=FALSE) +
+  geom_smooth(data = filter(combined_data_long, Prediction == "Predicted"), aes(linetype = Prediction), size=0.6, se=FALSE) +
   scale_y_continuous(labels = scales::label_comma()) +
   labs(title = "Trend in Public Transportation Usage",
        x = "April of Each Year",

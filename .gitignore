@@ -3,6 +3,9 @@
 .RData
 .Ruserdata
 Paper.log
+.DS_STORE
+Paper.aux
+Paper.out
 
 # REMOVE ONCE READY TO SUBMIT
 Paper.pdf
