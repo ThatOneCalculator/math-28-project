@@ -214,7 +214,8 @@ add_tangent_lines <- function(plot, data, x_var, y_var, color, line_length = 0.5
 # Plot Trend Usage
 # Create the line plot with observed data
 p <- ggplot(combined_data_long, aes(x = Year, y = TotalRidership, color = Type)) +
-  geom_line(aes(linetype = Prediction)) +
+  geom_line(data = filter(combined_data_long, Prediction == "Actual"), aes(linetype = Prediction)) +
+  geom_smooth(data = filter(combined_data_long, Prediction == "Predicted"), aes(linetype = Prediction), se=FALSE) +
   scale_y_continuous(labels = scales::label_comma()) +
   labs(title = "Trend in Public Transportation Usage",
        x = "April of Each Year",
@@ -222,29 +223,17 @@ p <- ggplot(combined_data_long, aes(x = Year, y = TotalRidership, color = Type))
        color = "Transportation Type",
        linetype = "Data Type") +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(min(ridership_data$Year), max(all_years$Year))) +
-  scale_y_continuous(labels = scales::label_comma(), breaks = scales::pretty_breaks(n = 14))
-
+  scale_y_continuous(labels = scales::label_comma(), breaks = scales::pretty_breaks(n = 14)) +
+  scale_color_discrete(labels=c("Bus - Linear Reg.", "Bus - Quadratic Reg.", "Rail - Linear Reg.", "Bus - Quadratic Reg."))
+  
 # Overlay real data
 p <- p +
   geom_line(data = ridership_long, aes(x = Year, y = RateOfChange, color = Type), size=1)
 
-# Add predicted lines for past years (where we have actual data)
-predicted_data_long <- all_years %>%
-  select(Year, Total.Monthly.Bus, Total.Monthly.Rail, Total.Monthly.Bus_poly, Total.Monthly.Rail_poly) %>%
-  pivot_longer(cols = c("Total.Monthly.Bus", "Total.Monthly.Rail", "Total.Monthly.Bus_poly", "Total.Monthly.Rail_poly"),
-               names_to = "Type",
-               values_to = "TotalRidership") %>%
-  mutate(Prediction = "Predicted") %>%
-  filter(Year <= max(ridership_data$Year))
-
-# Overlay this on the plot with a different line type
-p <- p +
-  geom_line(data = predicted_data_long, aes(x = Year, y = TotalRidership, color = Type, linetype = Prediction))
-
 # Add tangent lines
 p <- add_tangent_lines(p, all_years, "Year", "Total.Monthly.Bus", "red")
 p <- add_tangent_lines(p, all_years, "Year", "Total.Monthly.Bus_poly", "darkgreen", line_length = 0.2)
-p <- add_tangent_lines(p, all_years, "Year", "Total.Monthly.Rail", "turquoise", line_length=0.7)
+p <- add_tangent_lines(p, all_years, "Year", "Total.Monthly.Rail", "darkblue", line_length=0.7)
 p <- add_tangent_lines(p, all_years, "Year", "Total.Monthly.Rail_poly", "purple")
 
 # Theme
