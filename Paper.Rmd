@@ -94,6 +94,12 @@ $$
 
 where $R(t)$ represents the ridership at time $t$. This derivative analysis provides the velocity of ridership change, indicating whether usage is increasing or decreasing over time.
 
+It is important to keep in mind the usage of information like such. For Metro, getting their ridership to pre-pandemic numbers would be a huge accomplishment in the public transit landscape of Los Angeles. Total ridership in May 2023 was at 77% of 2019 levels, and in June 2023, it was at 81% of its 2019 pre-pandemic level. When using March of 2020 as our reference point, we can analyze the potentially differing rates of change in the ridership of Metro Bus and Metro Rail usage over time. Over the first year from 2020, the total monthly ridership went down roughly by roughly 22.5 million users.
+
+\
+
+The derivative of bus rider usage in Los Angeles from 2019 to 2022 shows a gradual recovery in ridership, with consistent year-over-year increases and efforts to restore pre-pandemic levels. The recovery of bus ridership in Los Angeles reflects the ongoing efforts of Metro to improve mobility and public transit accessibility in the region. These changes indicate a positive trend in bus rider usage, with a focus on restoring and surpassing pre-pandemic ridership levels.
+
 ```{r rate-of-change-and-regression}
 # Derivative Analysis and Regression
 # Calculate the rate of change for Total Monthly Bus and Rail
@@ -292,4 +298,4 @@ print(p)
 
 # Sources:
 
-- Transit ridership data: Los Angeles Metro "L.A. METRO TRANSIT RIDERSHIP UP 10 PERCENT, SETS POST-PANDEMIC RECORD", Patrick Chandler
+-   Transit ridership data: Los Angeles Metro "L.A. METRO TRANSIT RIDERSHIP UP 10 PERCENT, SETS POST-PANDEMIC RECORD", Patrick Chandler
