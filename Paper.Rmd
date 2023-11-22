@@ -73,7 +73,8 @@ p <- ggplot(ridership_long, aes(x=Year, y=RateOfChange, color=Type, group=Type))
        x="April of Each Year",
        y="Rate of Change in Total Monthly Ridership",
        color="Transportation Type") +
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(2019, 2023))
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(2019, 2023)) +
+  scale_color_discrete(labels=c("Bus", "Rail"))
 
 # Theme
 p <- p + theme_bw()
