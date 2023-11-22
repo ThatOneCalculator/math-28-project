@@ -276,7 +276,7 @@ p <- ggplot(combined_data_long, aes(x = Year, y = TotalRidership, color = Type))
        linetype = "Data Type") +
   scale_x_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(min(ridership_data$Year), max(all_years$Year))) +
   scale_y_continuous(labels = scales::label_comma(), breaks = scales::pretty_breaks(n = 14)) +
-  scale_color_discrete(labels=c("Bus - Linear Reg.", "Bus - Quadratic Reg.", "Rail - Linear Reg.", "Bus - Quadratic Reg."))
+  scale_color_discrete(labels=c("Bus - Linear Reg.", "Bus - Quadratic Reg.", "Rail - Linear Reg.", "Rail - Quadratic Reg."))
   
 # Overlay real data
 p <- p +
