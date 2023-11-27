@@ -38,6 +38,8 @@ Los Angeles -- the sprawling metropolis that we call home -- has become synonymo
 
 The aim of this study is to examine how the rapid growth of Los Angeles affects the demand for public transportation. The investigation includes a quantitative assessment utilizing derivatives to determine the rate of change in public transportation usage. Additionally, the study examines the elasticity of demand for transportation options in Los Angeles based on pricing, availability, convenience, and modes. This analysis offers insights into the responsiveness of ridership to changes in these factors, informing strategies to enhance the public transportation system.
 
+This information is crucial for making impactful decisions related to resource allocation, service expansion, and policy adjustments. Transit agencies can use this information to optimize fare structures, implement dynamic pricing models, or introduce discounts and incentives to attract more riders during specific times or for particular modes. Additionally, knowing how pricing, availability, and convenience impact ridership allows for targeted marketing and communication strategies.
+
 ## Methodology
 
 ### Data Collection
