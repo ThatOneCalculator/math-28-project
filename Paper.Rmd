@@ -9,8 +9,7 @@ output:
     extra_dependencies: amsmath
 abstract: This paper will examine how Los Angeles's demand for public transportation
   has been affected the last few years, utilizing derivatives to determine the rate
-  of change in public transportation usage and studying the elasticity of demand for
-  transportation options based on pricing, availability, convenience, and modes.
+  of change in public transportation usage.
 geometry: margin=1in
 ---
 
@@ -54,23 +53,17 @@ The methodological approach consists of two primary quantitative analyses:
 -   Data transformation into a suitable format for analysis using the tidyverse collection of R packages.
 -   Visualization of trends through line plots, elucidating patterns and growth trajectories.
 
-#### Elasticity of Demand Analysis:
-
--   Analyze the responsiveness of public transportation demand to changes in price (fare changes), availability (service hours, frequency), convenience (route changes, wait times), and modes (bus vs. rail).
-
--   Employ econometric modeling to estimate the price elasticity of demand, cross-elasticity, and income elasticity, using regression analysis where ridership
-
 #### Visualization
 
 -   Data visualization was implemented using the `ggplot2` package in R
 -   Line plots were created to illustrate the trends in public transportation ridership over time, broken down by transportation type (bus and rail)
 -   Adjustments were made to display actual numbers instead of scientific notation for clarity
 
-\newpage
-
 # Exploratory Data Analysis
 
-```{r rate-of-change-plot, fig.cap="Line plot of rate of change in public transportation ridership over time"}
+As seen in the graph below, ridership data for both the Metro Bus system and Metro Light Rail between 2019 and 2023 has been heavily impacted by the 2020 pandemic. The bus ridership has had more of a sharp decline from 2019 to 2020 and bounce-back shortly, while the rail was slowing down from 2019 - 2021, with not a lot of recovery. 
+
+```{r rate-of-change-plot, fig.cap="Line plot of rate of change in public transportation ridership over time", fig.height=4}
 ridership_long <- gather(ridership_data, key = "Type", value = "RateOfChange", -Year)
 
 # Create the line plot
@@ -318,3 +311,4 @@ print(p)
 # Sources:
 
 -   Transit ridership data: Los Angeles Metro "L.A. METRO TRANSIT RIDERSHIP UP 10 PERCENT, SETS POST-PANDEMIC RECORD", Patrick Chandler
+-   R Paper source code: https://github.com/thatonecalculator/math-28-project
