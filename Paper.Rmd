@@ -3,10 +3,10 @@ title: "Urbanization and Public Transportation of Los Angeles"
 author: "Kainoa Kanter, Julian Jacobson, Aidan Allen"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
-  html_document:
-    df_print: paged
   pdf_document:
     extra_dependencies: amsmath
+  html_document:
+    df_print: paged
 abstract: This paper will examine how Los Angeles's demand for public transportation
   has been affected the last few years, utilizing derivatives to determine the rate
   of change in public transportation usage.
@@ -310,18 +310,24 @@ print(p)
 
 ## Conclusion
 
-As previously stated, the aim of this study was to examine how the rapid growth of Los Angeles affects the demand for public transportation. Our quantitative research examines the elasticity of demand for transportation options in Los Angeles based on pricing, availability, convenience, and modes. With that, as this project was done with the principles of Business Calculus in mind, it is important to highlight and emphasize the importance of understanding the applications from our findings. 
-
-Firstly, an improved understanding of the allocation of resources and labor is something that decision makers within the public transportation sector can take away from our analysis. Understanding the elasticity of demand helps city planners anticipate changes in transportation preferences and adjust infrastructure investments accordingly. On the projects page of the metro website (<https://www.metro.net/projects/>), there are dozens of various projects that each require valuable tax-dollars, time, resources, planning, and execution. As Los Angeles is the third largest metropolitan area by GDP, being efficient in its decision making surrounding the allocation of resources in all facets of public transportation is something that our analysis of the rates of change of the bus and rail ridership over a five-year period will help better inform. 
-
-As anyone who has been to Los Angeles knows the horror stories of its infamous traffic, our analysis of the elasticity of demand for transportation options in Los Angeles can guide policies aimed at managing traffic congestion, an example of such being incentives for alternative transportation modes. As transportation is a significant contributor to air pollution and greenhouse gas emissions, understanding how demand for different transportation options impacts the environment can help in designing policies that encourage environmentally friendly modes of transportation, such as public transit or electric vehicles. In a more economic sense, the transportation sector is closely tied to the overall economy. Understanding the elasticity of demand can provide insights into the economic impact of specific changes in transportation options. This information is valuable for businesses, urban development, and job accessibility.
+As previously stated, the aim of this study was to examine how the rapid growth of Los Angeles affects the demand for public transportation. Our quantitative research examines the rate of change for transportation options in Los Angeles based on pricing, availability, convenience, and modes. With that, as this project was done with the principles of Business Calculus in mind, it is important to highlight and emphasize the importance of understanding the applications from our findings. 
 
 \
-Overall, an analysis of the data of public transportation in a city like Los Angeles offers immense benefits. From the perspective of the city, having a clearer understanding of the elasticity and rates of change between transportation modes over a five-year period enables them to make better informed decisions compared to only looking at raw data and trusting government intuition. From a business and entrepreneurial perspective, understanding the historical and predicted demand of various transportation and pricing options allows for entrepreneurs to better understand the institutional voids that may exist in public transportation in Los Angeles, and to potentially develop the next problem solver. (reference proposed Union Station to Dodger Stadium 5,000 seat gondola estimated well over original \$300 million estimate ([latimes.com -Dodger Stadium Gondola](https://www.latimes.com/sports/story/2023-04-30/dodger-stadium-gondola-project-frank-mccourt))
+
+Firstly, an improved understanding of the allocation of resources and labor is something that decision makers within the public transportation sector can take away from our analysis. Understanding the rate of change helps city planners anticipate changes in transportation preferences and adjust infrastructure investments accordingly. On the projects page of the metro website (<https://www.metro.net/projects/>), there are dozens of various projects that each require valuable tax-dollars, time, resources, planning, and execution. As Los Angeles is the third largest metropolitan area by GDP, being efficient in its decision making surrounding the allocation of resources in all facets of public transportation is something that our analysis of the rate of change of the bus and rail ridership over a five-year period will help better inform. 
+
+\
+
+As anyone who has been to Los Angeles knows the horror stories of its infamous traffic, our analysis of the rate of change for transportation options in Los Angeles can guide policies aimed at managing traffic congestion, an example of such being incentives for alternative transportation modes. As transportation is a significant contributor to air pollution and greenhouse gas emissions, understanding how demand for different transportation options impacts the environment can help in designing policies that encourage environmentally friendly modes of transportation, such as public transit or electric vehicles. In a more economic sense, the transportation sector is closely tied to the overall economy. Understanding the rate of change can provide insights into the economic impact of specific changes in transportation options. This information is valuable for businesses, urban development, and job accessibility.
+
+\
+Overall, an analysis of the data of public transportation in a city like Los Angeles offers immense benefits. From the perspective of the city, having a clearer understanding of the rate of change between transportation modes over a five-year period enables them to make better informed decisions compared to only looking at raw data and trusting government intuition. From a business and entrepreneurial perspective, understanding the historical and predicted demand of various transportation and pricing options allows for entrepreneurs to better understand the institutional voids that may exist in public transportation in Los Angeles, and to potentially develop the next problem solver. (reference proposed Union Station to Dodger Stadium 5,000 seat gondola estimated well over original \$300 million estimate ([latimes.com -Dodger Stadium Gondola](https://www.latimes.com/sports/story/2023-04-30/dodger-stadium-gondola-project-frank-mccourt))
 
 \newpage
 
 # Sources:
 
 -   Transit ridership data: Los Angeles Metro "L.A. METRO TRANSIT RIDERSHIP UP 10 PERCENT, SETS POST-PANDEMIC RECORD", Patrick Chandler
+-   Dodger Stadium Gondola Project Proposal [latimes.com](https://www.latimes.com/sports/story/2023-04-30/dodger-stadium-gondola-project-frank-mccourt){.uri}
+-   Los Angeles Metro Projects [Metro Projects](https://www.metro.net/projects/){.uri}
 -   R Paper source code: <https://github.com/thatonecalculator/math-28-project>
