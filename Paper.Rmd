@@ -35,9 +35,9 @@ budget_data <- read.csv("data/City_Budget_Expenditures_on_Transportation_2023110
 
 Los Angeles -- the sprawling metropolis that we call home -- has become synonymous with both opportunity and urban challenges and has experienced rapid growth in recent decades. This growth has significant implications for various sectors, particularly the public transportation system. As one of the most car-dependent cities in the United States, Los Angeles faces unique challenges in scaling its public transportation network to meet increasing demand. Understanding the dynamics of public transportation usage and the factors influencing ridership is critical for planning and policy development.
 
-The aim of this study is to examine how the rapid growth of Los Angeles affects the demand for public transportation. The investigation includes a quantitative assessment utilizing derivatives to determine the rate of change in public transportation usage. Additionally, the study examines the elasticity of demand for transportation options in Los Angeles based on pricing, availability, convenience, and modes. This analysis offers insights into the responsiveness of ridership to changes in these factors, informing strategies to enhance the public transportation system.
+The aim of this study is to examine how the rapid growth of Los Angeles affects the demand for public transportation. The investigation includes a quantitative assessment utilizing derivatives to determine the rate of change in public transportation usage. This analysis offers insights into the responsiveness of ridership to changes in these factors, informing strategies to enhance the public transportation system.
 
-This information is crucial for making impactful decisions related to resource allocation, service expansion, and policy adjustments. Transit agencies can use this information to optimize fare structures, implement dynamic pricing models, or introduce discounts and incentives to attract more riders during specific times or for particular modes. Additionally, knowing how pricing, availability, and convenience impact ridership allows for targeted marketing and communication strategies.
+This information can be useful for making impactful decisions related to resource allocation, service expansion, and policy adjustments. Transit agencies can use this information to optimize fare structures, implement dynamic pricing models, or introduce discounts and incentives to attract more riders during specific times or for particular modes. Additionally, knowing how pricing, availability, and convenience impact ridership allows for targeted marketing and communication strategies.
 
 ## Methodology
 
@@ -61,7 +61,7 @@ The methodological approach consists of two primary quantitative analyses:
 
 # Exploratory Data Analysis
 
-As seen in the graph below, ridership data for both the Metro Bus system and Metro Light Rail between 2019 and 2023 has been heavily impacted by the 2020 pandemic. The bus ridership has had more of a sharp decline from 2019 to 2020 and bounce-back shortly, while the rail was slowing down from 2019 - 2021, with not a lot of recovery. 
+As seen in the graph below, ridership data for both the Metro Bus system and Metro Light Rail between 2019 and 2023 has been heavily impacted by the 2020 pandemic. The bus ridership has had more of a sharp decline from 2019 to 2020 and bounce-back shortly, while the rail was slowing down from 2019 - 2021, with not a lot of recovery.
 
 ```{r rate-of-change-plot, fig.cap="Line plot of rate of change in public transportation ridership over time", fig.height=4}
 ridership_long <- gather(ridership_data, key = "Type", value = "RateOfChange", -Year)
@@ -311,4 +311,4 @@ print(p)
 # Sources:
 
 -   Transit ridership data: Los Angeles Metro "L.A. METRO TRANSIT RIDERSHIP UP 10 PERCENT, SETS POST-PANDEMIC RECORD", Patrick Chandler
--   R Paper source code: https://github.com/thatonecalculator/math-28-project
+-   R Paper source code: <https://github.com/thatonecalculator/math-28-project>
