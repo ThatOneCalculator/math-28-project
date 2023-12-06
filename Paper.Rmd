@@ -61,7 +61,7 @@ The methodological approach consists of two primary quantitative analyses:
 
 # Exploratory Data Analysis
 
-As seen in the graph below, ridership data for both the Metro Bus system and Metro Light Rail between 2019 and 2023 has been heavily impacted by the 2020 pandemic. The bus ridership has had more of a sharp decline from 2019 to 2020 and bounce-back shortly, while the rail was slowing down from 2019 - 2021, with not a lot of recovery.
+As seen in the graph below, ridership data for both the Metro Bus system and Metro Light Rail between 2019 and 2023 has been heavily impacted by the 2020 pandemic. Bus ridership had a sharp decline from 2019 to 2020, however, it bounced back shortly afterward. The graph below can give us a visual on the impact COVID-19 had on public transport in the city of Los Angeles. In April of 2020, bus ridership had decreased heavily to a low of below 5 million riders. By April 2021, it had recovered up to about 12.5 million riders. By the end of 2023, riders returned to just above 17 million. While the Metro Light Rail did not experience as sharp of a decline from 2019 - 2020, this decrease continued into 2021. That decline produced a low of below 5 million riders. In 2023, the number of riders has still not returned to pre-pandemic levis hovering at 5 million users. Both systems of transport saw reduction in users, although, the metro bus system saw a greater decline and greater recovery.
 
 ```{r rate-of-change-plot, fig.cap="Line plot of rate of change in public transportation ridership over time", fig.height=4}
 ridership_long <- gather(ridership_data, key = "Type", value = "RateOfChange", -Year)
